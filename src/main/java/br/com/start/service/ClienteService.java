@@ -79,7 +79,7 @@ public class ClienteService {
 	public List<ClienteSaidaDto> listar() {
 		List<Cliente> clientes= repository.findAll();
 		
-		List <ClienteSaidaDto> saidaDto = mapper.map(clientes, new TypeToken<List<ClienteSaidaDto>>() {}.getType());
+		List<ClienteSaidaDto> saidaDto = mapper.map(clientes, new TypeToken<List<ClienteSaidaDto>>() {}.getType());
 		return saidaDto;
 	}
 

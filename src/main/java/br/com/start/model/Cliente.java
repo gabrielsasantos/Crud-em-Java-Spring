@@ -15,16 +15,19 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@Entity
+@Entity(name="cliente")
 public class Cliente {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
 	private String nome;
+	
 	private String requisito;
+	
 	@Enumerated(EnumType.STRING)
-	private EnumTipoPessoa tipoCliente;
+	private TipoPessoa tipoCliente;
+	
 	private Double valorContrato;
-
 }

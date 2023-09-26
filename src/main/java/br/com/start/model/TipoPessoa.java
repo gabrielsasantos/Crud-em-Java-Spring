@@ -1,6 +1,6 @@
 package br.com.start.model;
 
-public enum EnumTipoPessoa {
+public enum TipoPessoa {
 	fisica, juridica
 
 }

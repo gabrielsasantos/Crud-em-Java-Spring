@@ -1,6 +1,6 @@
 package br.com.start.model.dto;
 
-import br.com.start.model.EnumTipoPessoa;
+import br.com.start.model.TipoPessoa;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,7 +13,7 @@ public class ClienteSaidaDto {
 	private Integer id;
 	private String nome;
 	private String requisito;
-	private EnumTipoPessoa tipoCliente;
+	private TipoPessoa tipoCliente;
 	private Double valorContrato;
 
 }
