@@ -34,7 +34,7 @@ public class ClienteController {
 	public ClienteSaidaDto criar(@Valid @RequestBody ClienteEntradaDto entradaDto) {
 		log.info("salvar: entradaDto={}", entradaDto);
 
-		return service.salvar(entradaDto);
+		return service.criar(entradaDto);
 	}
 
 	@PutMapping("id/{id}")

@@ -1,0 +1,21 @@
+CRUD Cliente
+
+POST
+url = clientes
+-> criando
+
+PUT
+url = clientes/id/{identificador}
+-> alterando
+
+GET
+url = clientes/id/{identificador}
+-> pegando 1 (identificado) 
+
+GET
+url = clientes
+-> pegando uma lista (não tenho como identicicar 1) 
+
+DELETE
+url = clientes/id/{identificador}
+-> excluir 1 (identificado) 

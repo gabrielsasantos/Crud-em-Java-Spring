@@ -24,7 +24,7 @@ public class ClienteService {
 	@Autowired
 	private ModelMapper mapper;
 
-	public ClienteSaidaDto salvar(ClienteEntradaDto entradaDto) {
+	public ClienteSaidaDto criar(ClienteEntradaDto entradaDto) {
 
 		Cliente cliente = mapper.map(entradaDto, Cliente.class);
 
