@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +31,7 @@ public class ClienteController {
 
 	@ResponseStatus(code = HttpStatus.CREATED)
 	@PostMapping
-	public ClienteSaidaDto salvar(@Valid @RequestBody ClienteEntradaDto entradaDto) {
+	public ClienteSaidaDto criar(@Valid @RequestBody ClienteEntradaDto entradaDto) {
 		log.info("salvar: entradaDto={}", entradaDto);
 
 		return service.salvar(entradaDto);
@@ -60,7 +59,7 @@ public class ClienteController {
 	}
 
 	@ResponseStatus(code = HttpStatus.OK)
-	@GetMapping("listar")
+	@GetMapping
 	public List<ClienteSaidaDto> listar() {
 		log.info("listar");
 

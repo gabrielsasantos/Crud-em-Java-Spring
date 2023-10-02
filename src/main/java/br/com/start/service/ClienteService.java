@@ -46,10 +46,11 @@ public class ClienteService {
 
 			repository.save(clienteBanco);
 
-		}
-
-		throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Não encontrada");
+		} else {
+	        throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
+	    }
 	}
+	
 
 	public ClienteSaidaDto pegarUm(Integer id) {
 		Optional<Cliente> optional = repository.findById(id);
