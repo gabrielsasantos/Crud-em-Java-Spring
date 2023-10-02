@@ -1,5 +1,6 @@
 package br.com.start.model.dto;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -13,17 +14,17 @@ import lombok.ToString;
 @ToString
 public class ClienteEntradaDto {
 
-	@NotNull
-	@Size(max =200, message= "tamanho inválido")
+	@NotBlank (message = "obrigatorio")
+	@Size(max =200, message= "máximo 200 caracteres")
 	private String nome;
 	
-	@Size(max =500, message= "tamanho inválido")
+	@Size(max =500, message= "máximo 500 caracteres")
 	private String requisito;
 	
-	@NotNull
+	@NotNull (message = "obrigatorio")
 	private TipoPessoa tipoCliente;
 	
-	@NotNull
-	@Digits(integer=15, fraction=2)
+	@NotNull (message = "obrigatorio")
+	@Digits(integer=15, fraction=2 , message = "invalido, formato = 9.99")
 	private Double valorContrato;
 }

@@ -5,9 +5,11 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.modelmapper.TypeToken;
 
+import br.com.start.exception.ErroDeNegocioException;
 import br.com.start.model.Cliente;
 import br.com.start.model.dto.ClienteEntradaDto;
 import br.com.start.model.dto.ClienteSaidaDto;
@@ -18,13 +20,13 @@ public class ClienteService {
 
 	@Autowired
 	private ClienteRepository repository;
-	
+
 	@Autowired
 	private ModelMapper mapper;
 
 	public ClienteSaidaDto salvar(ClienteEntradaDto entradaDto) {
 
-		Cliente cliente= mapper.map(entradaDto, Cliente.class);
+		Cliente cliente = mapper.map(entradaDto, Cliente.class);
 
 		Cliente clienteBanco = repository.save(cliente);
 
@@ -33,22 +35,20 @@ public class ClienteService {
 		return saidaDto;
 	}
 
-	public boolean alterar(Integer id, ClienteEntradaDto entradaDto) {
+	public void alterar(Integer id, ClienteEntradaDto entradaDto) {
 		Optional<Cliente> optinal = repository.findById(id);
 
 		if (optinal.isPresent()) {
 
 			Cliente clienteBanco = optinal.get();
-			
+
 			mapper.map(entradaDto, clienteBanco);
 
 			repository.save(clienteBanco);
-			
-			return true;
 
 		}
-		
-		return false;
+
+		throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Não encontrada");
 	}
 
 	public ClienteSaidaDto pegarUm(Integer id) {
@@ -56,30 +56,30 @@ public class ClienteService {
 
 		if (optional.isPresent()) {
 			Cliente clienteBanco = optional.get();
-			
+
 			ClienteSaidaDto saidaDto = mapper.map(clienteBanco, ClienteSaidaDto.class);
 
 			return saidaDto;
 
 		}
-		return null;
+		throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Não encontrada");
 	}
 
-	public boolean excluir(Integer id) {
+	public void excluir(Integer id) {
 
 		if (!repository.existsById(id)) {
-			return false;
+			throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Não encontrada");
 		}
 
 		repository.deleteById(id);
 
-		return true;
 	}
 
 	public List<ClienteSaidaDto> listar() {
-		List<Cliente> clientes= repository.findAll();
-		
-		List<ClienteSaidaDto> saidaDto = mapper.map(clientes, new TypeToken<List<ClienteSaidaDto>>() {}.getType());
+		List<Cliente> clientes = repository.findAll();
+
+		List<ClienteSaidaDto> saidaDto = mapper.map(clientes, new TypeToken<List<ClienteSaidaDto>>() {
+		}.getType());
 		return saidaDto;
 	}
 
