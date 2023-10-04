@@ -24,7 +24,7 @@ public class ClienteService {
 
 	@Autowired
 	private ClienteValidator validator;
-	
+
 	@Autowired
 	private ModelMapper mapper;
 
@@ -39,15 +39,11 @@ public class ClienteService {
 	}
 
 	public void alterar(Integer id, ClienteEntradaDto entradaDto) {
+		validator.alterar(id, entradaDto);
 		Optional<Cliente> optional = repository.findById(id);
 
 		if (optional.isPresent()) {
 			Cliente clienteBanco = optional.get();
-			String novoNome = entradaDto.getNome();
-
-			if (repository.existsByNomeAndIdNot(novoNome, id)) {
-				throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Nome duplicado");
-			}
 
 			mapper.map(entradaDto, clienteBanco);
 
@@ -56,8 +52,6 @@ public class ClienteService {
 			throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
 		}
 	}
-
-	
 
 	public ClienteSaidaDto pegarUm(Integer id) {
 		Optional<Cliente> optional = repository.findById(id);
@@ -75,10 +69,7 @@ public class ClienteService {
 
 	public void excluir(Integer id) {
 
-		if (!repository.existsById(id)) {
-			throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Não encontrada");
-		}
-
+		validator.excluir(id);
 		repository.deleteById(id);
 
 	}
