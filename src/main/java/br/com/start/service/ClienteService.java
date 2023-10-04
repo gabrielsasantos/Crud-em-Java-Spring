@@ -14,6 +14,7 @@ import br.com.start.model.Cliente;
 import br.com.start.model.dto.ClienteEntradaDto;
 import br.com.start.model.dto.ClienteSaidaDto;
 import br.com.start.repository.ClienteRepository;
+import br.com.start.validator.ClienteValidator;
 
 @Service
 public class ClienteService {
@@ -22,14 +23,13 @@ public class ClienteService {
 	private ClienteRepository repository;
 
 	@Autowired
+	private ClienteValidator validator;
+	
+	@Autowired
 	private ModelMapper mapper;
 
 	public ClienteSaidaDto criar(ClienteEntradaDto entradaDto) {
-
-		String nome = entradaDto.getNome();
-		if (repository.existsByNome(nome)) {
-			throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Nome duplicado");
-		}
+		validator.criar(entradaDto);
 
 		Cliente cliente = mapper.map(entradaDto, Cliente.class);
 		Cliente clienteBanco = repository.save(cliente);
