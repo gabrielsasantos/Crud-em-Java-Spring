@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.modelmapper.TypeToken;
 
 import br.com.start.exception.ErroDeNegocioException;
 import br.com.start.model.Cliente;
@@ -26,30 +26,37 @@ public class ClienteService {
 
 	public ClienteSaidaDto criar(ClienteEntradaDto entradaDto) {
 
+		String nome = entradaDto.getNome();
+		if (repository.existsByNome(nome)) {
+			throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Nome duplicado");
+		}
+
 		Cliente cliente = mapper.map(entradaDto, Cliente.class);
-
 		Cliente clienteBanco = repository.save(cliente);
-
 		ClienteSaidaDto saidaDto = mapper.map(clienteBanco, ClienteSaidaDto.class);
 
 		return saidaDto;
 	}
 
 	public void alterar(Integer id, ClienteEntradaDto entradaDto) {
-		Optional<Cliente> optinal = repository.findById(id);
+		Optional<Cliente> optional = repository.findById(id);
 
-		if (optinal.isPresent()) {
+		if (optional.isPresent()) {
+			Cliente clienteBanco = optional.get();
+			String novoNome = entradaDto.getNome();
 
-			Cliente clienteBanco = optinal.get();
+			if (repository.existsByNomeAndIdNot(novoNome, id)) {
+				throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Nome duplicado");
+			}
 
 			mapper.map(entradaDto, clienteBanco);
 
 			repository.save(clienteBanco);
-
 		} else {
-	        throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
-	    }
+			throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
+		}
 	}
+
 	
 
 	public ClienteSaidaDto pegarUm(Integer id) {

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,24 @@ public class ErroController {
 		List<String> validacoes = new ArrayList<>();
 
 		for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
+			String path = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
+			validacoes.add(path + ": " + violation.getMessage());
+		}
+
+		ErroDto erroDto = new ErroDto();
+		erroDto.setErro("Erro de Validação");
+		erroDto.setValidacoes(validacoes);
+
+		return erroDto;
+	}
+		
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(ValidationException.class)
+	@ResponseBody
+	public ErroDto handleNomeDuplicado(ValidationException e) {
+		List<String> validacoes = new ArrayList<>();
+
+		for (ConstraintViolation<?> violation : ((ConstraintViolationException) e).getConstraintViolations()) {
 			String path = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
 			validacoes.add(path + ": " + violation.getMessage());
 		}
