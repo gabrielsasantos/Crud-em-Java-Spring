@@ -41,7 +41,7 @@ public class ErroController {
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(BindException.class)
 	@ResponseBody
-	public ErroDto handleBindException(BindException exception) {
+	public ErroDto handle(BindException exception) {
 		List<String> validacoes = new ArrayList<>();
 
 		for (FieldError error : exception.getBindingResult().getFieldErrors()) {
@@ -59,7 +59,7 @@ public class ErroController {
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(ConstraintViolationException.class)
 	@ResponseBody
-	public ErroDto handleConstraintViolationException(ConstraintViolationException e) {
+	public ErroDto handle(ConstraintViolationException e) {
 		List<String> validacoes = new ArrayList<>();
 
 		for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
@@ -77,7 +77,7 @@ public class ErroController {
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(ValidationException.class)
 	@ResponseBody
-	public ErroDto handleNomeDuplicado(ValidationException e) {
+	public ErroDto handle(ValidationException e) {
 		List<String> validacoes = new ArrayList<>();
 
 		for (ConstraintViolation<?> violation : ((ConstraintViolationException) e).getConstraintViolations()) {

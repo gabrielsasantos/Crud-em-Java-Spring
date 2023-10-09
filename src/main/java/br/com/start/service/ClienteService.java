@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.start.exception.ErroDeNegocioException;
+import br.com.start.exception.TabelaDeErros;
 import br.com.start.model.Cliente;
 import br.com.start.model.dto.ClienteEntradaDto;
 import br.com.start.model.dto.ClienteSaidaDto;
@@ -49,7 +50,7 @@ public class ClienteService {
 
 			repository.save(clienteBanco);
 		} else {
-			throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
+			throw new ErroDeNegocioException(TabelaDeErros.CLIENTE_NAO_ENCONTRADO);
 		}
 	}
 
