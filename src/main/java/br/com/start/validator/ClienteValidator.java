@@ -1,10 +1,10 @@
 package br.com.start.validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import br.com.start.exception.ErroDeNegocioException;
+import br.com.start.exception.TabelaDeErros;
 import br.com.start.model.dto.ClienteEntradaDto;
 import br.com.start.repository.ClienteRepository;
 
@@ -17,7 +17,7 @@ public class ClienteValidator {
 	public void criar(ClienteEntradaDto entradaDto) {
 		String nome = entradaDto.getNome();
 		if (repository.existsByNome(nome)) {
-			throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Nome duplicado");
+			throw new ErroDeNegocioException(TabelaDeErros.CLIENTE_DUPLICADO);
 		}
 
 	}
@@ -25,14 +25,14 @@ public class ClienteValidator {
 	public void alterar(Integer id, ClienteEntradaDto entradaDto) {
 		String novoNome = entradaDto.getNome();
 		if (repository.existsByNomeAndIdNot(novoNome, id)) {
-			throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Nome duplicado");
+			throw new ErroDeNegocioException(TabelaDeErros.CLIENTE_DUPLICADO);
 		}
 	}
 
 	public void excluir(Integer id) {
 
 		if (!repository.existsById(id)) {
-			throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Não encontrada");
+			throw new ErroDeNegocioException(TabelaDeErros.CLIENTE_NAO_ENCONTRADO);
 		}
 
 	}

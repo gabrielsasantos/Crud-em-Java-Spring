@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.start.exception.ErroDeNegocioException;
@@ -65,7 +64,7 @@ public class ClienteService {
 			return saidaDto;
 
 		}
-		throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Não encontrada");
+		throw new ErroDeNegocioException(TabelaDeErros.CLIENTE_NAO_ENCONTRADO);
 	}
 
 	public void excluir(Integer id) {

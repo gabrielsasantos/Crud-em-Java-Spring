@@ -12,7 +12,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum TabelaDeErros {
-	CLIENTE_NAO_ENCONTRADO(HttpStatus.NOT_FOUND, "Cliente não encontrado");
+	CLIENTE_NAO_ENCONTRADO(HttpStatus.NOT_FOUND, "Cliente não encontrado"),
+	CLIENTE_DUPLICADO(HttpStatus.PRECONDITION_FAILED, "Cliente duplicado"),
+	CLIENTE_VALIDACAO(HttpStatus.NOT_FOUND, "Cliente não encontrado");
 	
 	private final HttpStatus httpStatus;
 	private final String erro;
