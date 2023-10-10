@@ -14,7 +14,7 @@ import lombok.Getter;
 public enum TabelaDeErros {
 	CLIENTE_NAO_ENCONTRADO(HttpStatus.NOT_FOUND, "Cliente não encontrado"),
 	CLIENTE_DUPLICADO(HttpStatus.PRECONDITION_FAILED, "Cliente duplicado"),
-	CLIENTE_VALIDACAO(HttpStatus.NOT_FOUND, "Cliente não encontrado");
+	CLIENTE_VALIDACAO(HttpStatus.BAD_REQUEST, "Erro de validação dos campos clientes.");
 	
 	private final HttpStatus httpStatus;
 	private final String erro;

@@ -38,10 +38,9 @@ public class ErroController {
 		return ResponseEntity.status(e.getHttpStatus()).body(erroDto);
 	}
 
-	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(BindException.class)
 	@ResponseBody
-	public ErroDto handle(BindException exception) {
+	public ResponseEntity<ErroDto> handleBindException(BindException exception) {
 		List<String> validacoes = new ArrayList<>();
 
 		for (FieldError error : exception.getBindingResult().getFieldErrors()) {
@@ -50,16 +49,14 @@ public class ErroController {
 		}
 
 		ErroDto erroDto = new ErroDto();
-		erroDto.setErro("Erro de Validação");
 		erroDto.setValidacoes(validacoes);
 
-		return erroDto;
+		return ResponseEntity.ok(erroDto);
 	}
 
-	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(ConstraintViolationException.class)
 	@ResponseBody
-	public ErroDto handle(ConstraintViolationException e) {
+	public ResponseEntity<ErroDto> handleConstraintViolationException(ConstraintViolationException e) {
 		List<String> validacoes = new ArrayList<>();
 
 		for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
@@ -68,16 +65,14 @@ public class ErroController {
 		}
 
 		ErroDto erroDto = new ErroDto();
-		erroDto.setErro("Erro de Validação");
 		erroDto.setValidacoes(validacoes);
 
-		return erroDto;
+		return ResponseEntity.ok(erroDto);
 	}
-		
-	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	
 	@ExceptionHandler(ValidationException.class)
 	@ResponseBody
-	public ErroDto handle(ValidationException e) {
+	public ResponseEntity<ErroDto> handleValidationException(ValidationException e) {
 		List<String> validacoes = new ArrayList<>();
 
 		for (ConstraintViolation<?> violation : ((ConstraintViolationException) e).getConstraintViolations()) {
@@ -86,9 +81,8 @@ public class ErroController {
 		}
 
 		ErroDto erroDto = new ErroDto();
-		erroDto.setErro("Erro de Validação");
 		erroDto.setValidacoes(validacoes);
 
-		return erroDto;
+		return ResponseEntity.ok(erroDto);
 	}
 }
