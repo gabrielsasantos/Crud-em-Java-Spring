@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +38,9 @@ public class ErroController {
 		return ResponseEntity.status(e.getHttpStatus()).body(erroDto);
 	}
 
-	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(BindException.class)
 	@ResponseBody
-	public ErroDto handleBindException(BindException exception) {
+	public ResponseEntity<ErroDto> handleBindException(BindException exception) {
 		List<String> validacoes = new ArrayList<>();
 
 		for (FieldError error : exception.getBindingResult().getFieldErrors()) {
@@ -49,16 +49,14 @@ public class ErroController {
 		}
 
 		ErroDto erroDto = new ErroDto();
-		erroDto.setErro("Erro de Validação");
 		erroDto.setValidacoes(validacoes);
 
-		return erroDto;
+		return ResponseEntity.ok(erroDto);
 	}
 
-	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(ConstraintViolationException.class)
 	@ResponseBody
-	public ErroDto handleConstraintViolationException(ConstraintViolationException e) {
+	public ResponseEntity<ErroDto> handleConstraintViolationException(ConstraintViolationException e) {
 		List<String> validacoes = new ArrayList<>();
 
 		for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
@@ -67,9 +65,24 @@ public class ErroController {
 		}
 
 		ErroDto erroDto = new ErroDto();
-		erroDto.setErro("Erro de Validação");
 		erroDto.setValidacoes(validacoes);
 
-		return erroDto;
+		return ResponseEntity.ok(erroDto);
+	}
+	
+	@ExceptionHandler(ValidationException.class)
+	@ResponseBody
+	public ResponseEntity<ErroDto> handleValidationException(ValidationException e) {
+		List<String> validacoes = new ArrayList<>();
+
+		for (ConstraintViolation<?> violation : ((ConstraintViolationException) e).getConstraintViolations()) {
+			String path = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
+			validacoes.add(path + ": " + violation.getMessage());
+		}
+
+		ErroDto erroDto = new ErroDto();
+		erroDto.setValidacoes(validacoes);
+
+		return ResponseEntity.ok(erroDto);
 	}
 }

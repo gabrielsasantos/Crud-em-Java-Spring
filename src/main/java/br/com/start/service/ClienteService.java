@@ -4,16 +4,17 @@ import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
 import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import br.com.start.exception.ErroDeNegocioException;
+import br.com.start.exception.TabelaDeErros;
 import br.com.start.model.Cliente;
 import br.com.start.model.dto.ClienteEntradaDto;
 import br.com.start.model.dto.ClienteSaidaDto;
 import br.com.start.repository.ClienteRepository;
+import br.com.start.validator.ClienteValidator;
 
 @Service
 public class ClienteService {
@@ -22,35 +23,35 @@ public class ClienteService {
 	private ClienteRepository repository;
 
 	@Autowired
+	private ClienteValidator validator;
+
+	@Autowired
 	private ModelMapper mapper;
 
 	public ClienteSaidaDto criar(ClienteEntradaDto entradaDto) {
+		validator.criar(entradaDto);
 
 		Cliente cliente = mapper.map(entradaDto, Cliente.class);
-
 		Cliente clienteBanco = repository.save(cliente);
-
 		ClienteSaidaDto saidaDto = mapper.map(clienteBanco, ClienteSaidaDto.class);
 
 		return saidaDto;
 	}
 
 	public void alterar(Integer id, ClienteEntradaDto entradaDto) {
-		Optional<Cliente> optinal = repository.findById(id);
+		validator.alterar(id, entradaDto);
+		Optional<Cliente> optional = repository.findById(id);
 
-		if (optinal.isPresent()) {
-
-			Cliente clienteBanco = optinal.get();
+		if (optional.isPresent()) {
+			Cliente clienteBanco = optional.get();
 
 			mapper.map(entradaDto, clienteBanco);
 
 			repository.save(clienteBanco);
-
 		} else {
-	        throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
-	    }
+			throw new ErroDeNegocioException(TabelaDeErros.CLIENTE_NAO_ENCONTRADO);
+		}
 	}
-	
 
 	public ClienteSaidaDto pegarUm(Integer id) {
 		Optional<Cliente> optional = repository.findById(id);
@@ -63,15 +64,12 @@ public class ClienteService {
 			return saidaDto;
 
 		}
-		throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Não encontrada");
+		throw new ErroDeNegocioException(TabelaDeErros.CLIENTE_NAO_ENCONTRADO);
 	}
 
 	public void excluir(Integer id) {
 
-		if (!repository.existsById(id)) {
-			throw new ErroDeNegocioException(HttpStatus.NOT_FOUND, "Não encontrada");
-		}
-
+		validator.excluir(id);
 		repository.deleteById(id);
 
 	}
